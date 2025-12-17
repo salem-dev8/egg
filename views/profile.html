@@ -507,6 +507,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
@@ -518,9 +520,9 @@
             </div>
 
             <ul class="nav-menu">
-                <li><a href="/">🏠 الرئيسية</a></li>
-                <li><a href="#" class="active">👤 البروفيل</a></li>
-                <li><a href="/create-post">✏️ إنشاء منشور</a></li>
+                <li><a href="/"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                <li><a href="#" class="active"><i class="fa-solid fa-user"></i> البروفيل</a></li>
+                <li><a href="/create-post"><i class="fa-solid fa-pen"></i> إنشاء منشور</a></li>
             </ul>
 
             <div class="user-info">
@@ -537,7 +539,7 @@
         <!-- المحتوى الرئيسي -->
         <main class="main-content">
             <div class="profile-header">
-                <div class="profile-cover">🐣</div>
+                <div class="profile-cover" id="profileCover"></div>
                 <div class="profile-info">
                     <img id="profileImage" class="profile-image" src="https://via.placeholder.com/120" alt="User">
                     <div class="profile-details">
@@ -646,6 +648,16 @@
             if (user.profileImage) {
                 document.getElementById('profileImage').src = user.profileImage;
                 document.getElementById('sidebarUserImg').src = user.profileImage;
+            }
+
+            // عرض غلاف البروفايل إن وُجد
+            const coverEl = document.getElementById('profileCover');
+            if (user.coverImage) {
+                coverEl.style.backgroundImage = `url('${user.coverImage}')`;
+                coverEl.style.backgroundSize = 'cover';
+                coverEl.style.backgroundPosition = 'center';
+            } else {
+                coverEl.style.backgroundImage = '';
             }
 
             document.getElementById('profileBio').textContent = user.bio || 'لا توجد سيرة ذاتية';

@@ -78,9 +78,28 @@ app.get('/create-post', (req, res) => {
 // ================================
 
 // تسجيل مستخدم جديد
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/auth/register', upload.fields([{ name: 'profileImage' }, { name: 'coverImage' }]), async (req, res) => {
   try {
     const { email, password, username } = req.body;
+
+    // رفع صور البروفايل و الغلاف إلى Cloudinary (إن وُجدت)
+    const uploaded = {};
+
+    const bufferToDataURI = (mimetype, buffer) => `data:${mimetype};base64,${buffer.toString('base64')}`;
+
+    if (req.files && req.files.profileImage && req.files.profileImage[0]) {
+      const file = req.files.profileImage[0];
+      const dataUri = bufferToDataURI(file.mimetype, file.buffer);
+      const result = await cloudinary.uploader.upload(dataUri, { folder: 'egg_profiles' });
+      uploaded.profileImage = result.secure_url;
+    }
+
+    if (req.files && req.files.coverImage && req.files.coverImage[0]) {
+      const file = req.files.coverImage[0];
+      const dataUri = bufferToDataURI(file.mimetype, file.buffer);
+      const result = await cloudinary.uploader.upload(dataUri, { folder: 'egg_profiles' });
+      uploaded.coverImage = result.secure_url;
+    }
 
     // إنشاء المستخدم في Firebase Auth
     const userRecord = await auth.createUser({
@@ -93,7 +112,8 @@ app.post('/api/auth/register', async (req, res) => {
       uid: userRecord.uid,
       username: username,
       email: email,
-      profileImage: null,
+      profileImage: uploaded.profileImage || null,
+      coverImage: uploaded.coverImage || null,
       bio: '',
       createdAt: new Date(),
       followers: [],

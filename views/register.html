@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>التسجيل - Egg</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
     <style>
         * {
             margin: 0;
@@ -155,11 +157,23 @@
         <h2>إنشاء حساب</h2>
         <p class="subtitle">انضم إلى منصة التواصل Egg الآن</p>
 
-        <form id="registerForm">
+        <form id="registerForm" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">اسم المستخدم</label>
                 <input type="text" id="username" name="username" placeholder="اختر اسماً فريداً" required>
                 <div class="error" id="usernameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="profileImage">صورة البروفايل (اختياري)</label>
+                <input type="file" id="profileImage" name="profileImage" accept="image/*">
+                <div id="profilePreview" style="margin-top:8px;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="coverImage">صورة الغلاف (اختياري)</label>
+                <input type="file" id="coverImage" name="coverImage" accept="image/*">
+                <div id="coverPreview" style="margin-top:8px;"></div>
             </div>
 
             <div class="form-group">
@@ -227,10 +241,19 @@
             if (hasError) return;
 
             try {
+                const formData = new FormData();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('password', password);
+
+                const profileFile = document.getElementById('profileImage').files[0];
+                const coverFile = document.getElementById('coverImage').files[0];
+                if (profileFile) formData.append('profileImage', profileFile);
+                if (coverFile) formData.append('coverImage', coverFile);
+
                 const res = await fetch('/api/auth/register', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, username })
+                    body: formData
                 });
 
                 const data = await res.json();
@@ -242,7 +265,7 @@
 
                 localStorage.setItem('userId', data.uid);
                 document.getElementById('successMsg').style.display = 'block';
-                
+
                 setTimeout(() => {
                     window.location.href = '/';
                 }, 1500);
@@ -256,6 +279,27 @@
             el.textContent = message;
             el.style.display = 'block';
         }
+
+        // معاينة الصور قبل الرفع
+        document.getElementById('profileImage').addEventListener('change', function(e){
+            const file = e.target.files[0];
+            if (!file) { document.getElementById('profilePreview').innerHTML = ''; return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('profilePreview').innerHTML = `<img src="${ev.target.result}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('coverImage').addEventListener('change', function(e){
+            const file = e.target.files[0];
+            if (!file) { document.getElementById('coverPreview').innerHTML = ''; return; }
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                document.getElementById('coverPreview').innerHTML = `<img src="${ev.target.result}" style="width:100%;max-height:120px;border-radius:8px;object-fit:cover;">`;
+            };
+            reader.readAsDataURL(file);
+        });
     </script>
 </body>
 </html>
