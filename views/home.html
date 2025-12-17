@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg - منصة التواصل</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            margin-bottom: 15px;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+
+        .nav-menu a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .user-info {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 10px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .feed {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .post-creator {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 15px;
+        }
+
+        .post-creator img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .post-creator-input {
+            flex: 1;
+        }
+
+        .post-creator-input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #f5f5f5;
+        }
+
+        .post-creator-input input:hover {
+            background: #efefef;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: space-around;
+            padding: 0 15px;
+        }
+
+        .post-action-btn {
+            flex: 1;
+            padding: 8px;
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 12px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .post-action-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .posts {
+            list-style: none;
+        }
+
+        .post {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .post:hover {
+            background: #fafafa;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .post-author img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+        }
+
+        .post-author-info h3 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .post-author-info span {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .post-media {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-actions-bar {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            border-radius: 8px;
+        }
+
+        .action-btn:hover {
+            color: #667eea;
+            background: #f0f0f0;
+        }
+
+        .action-btn.liked {
+            color: #ff6b6b;
+        }
+
+        .like-count {
+            font-size: 12px;
+            color: #666;
+            padding: 0 10px;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .comment {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .comment-content {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .comment-text {
+            margin-top: 3px;
+            color: #333;
+        }
+
+        .add-comment {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .add-comment img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .add-comment input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .add-comment button {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .add-comment button:hover {
+            background: #764ba2;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 20px;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #f5f5ff;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-preview {
+            margin-top: 10px;
+        }
+
+        .file-preview img,
+        .file-preview video,
+        .file-preview audio {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .nav-menu {
+                display: flex;
+                gap: 5px;
+            }
+
+            .nav-menu li {
+                margin-bottom: 0;
+            }
+
+            .user-info {
+                margin-top: 0;
+                border-top: none;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="logo" onclick="goHome()">
+                <img src="https://res.cloudinary.com/duixjs8az/image/upload/v1765998267/post_media/1765998267429-598220844_25338493479148699_2198426756832432568_n.jpg" alt="Egg Logo">
+                <h1>Egg</h1>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="/" class="active"><i class="fa-solid fa-house"></i> الرئيسية</a></li>
+                <li><a href="#" onclick="goToProfile()"><i class="fa-solid fa-user"></i> البروفيل</a></li>
+                <li><a href="/create-post"><i class="fa-solid fa-pen"></i> إنشاء منشور</a></li>
+            </ul>
+
+            <div class="user-info">
+                <div class="user-profile">
+                    <img id="userImg" src="https://via.placeholder.com/40" alt="User">
+                    <div>
+                        <div id="userName" style="font-size: 14px; font-weight: 600;">المستخدم</div>
+                        <div style="font-size: 12px; color: #999;">@username</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <div class="feed">
+                <!-- منشئ المنشور -->
+                <div class="post-creator">
+                    <img id="creatorImg" src="https://via.placeholder.com/50" alt="User">
+                    <div class="post-creator-input">
+                        <input type="text" placeholder="ماذا في بالك يا Egg؟" onclick="openPostModal()">
+                        <div class="post-actions">
+                            <button class="post-action-btn" onclick="focusMediaInput('image')">🖼️ صورة</button>
+                            <button class="post-action-btn" onclick="focusMediaInput('video')">🎥 فيديو</button>
+                            <button class="post-action-btn" onclick="focusMediaInput('audio')">🎵 صوت</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- قائمة المنشورات -->
+                <ul class="posts" id="postsList">
+                    <li class="loading">جاري تحميل المنشورات...</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal لإنشاء منشور -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>إنشاء منشور جديد</h2>
+                <button class="close-btn" onclick="closePostModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="postForm">
+                    <div class="form-group">
+                        <textarea id="postContent" placeholder="ماذا في بالك يا Egg؟" required></textarea>
+                    </div>
+
+                    <div class="file-input-wrapper">
+                        <label class="file-input-label">
+                            <div id="fileInputText">📁 اختر صورة أو فيديو أو صوت</div>
+                            <input type="file" id="mediaFile" accept="image/*,video/*,audio/*" onchange="previewMedia()">
+                        </label>
+                        <div id="filePreview" class="file-preview"></div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" style="margin-top: 15px;">نشر المنشور</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let mediaFile = null;
+
+        // تحقق من تسجيل المستخدم عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                window.location.href = '/login';
+                return;
+            }
+
+            loadUserProfile(userId);
+            loadPosts();
+        });
+
+        function loadUserProfile(userId) {
+            fetch(`/api/users/${userId}`)
+                .then(res => res.json())
+                .then(user => {
+                    currentUser = user;
+                    document.getElementById('userName').textContent = user.username;
+                    if (user.profileImage) {
+                        document.getElementById('userImg').src = user.profileImage;
+                        document.getElementById('creatorImg').src = user.profileImage;
+                    }
+                })
+                .catch(err => console.error('خطأ في تحميل البروفيل:', err));
+        }
+
+        function loadPosts() {
+            fetch('/api/posts')
+                .then(res => res.json())
+                .then(posts => {
+                    const postsList = document.getElementById('postsList');
+                    postsList.innerHTML = '';
+
+                    posts.forEach(post => {
+                        const postElement = createPostElement(post);
+                        postsList.appendChild(postElement);
+                    });
+                })
+                .catch(err => {
+                    console.error('خطأ في تحميل المنشورات:', err);
+                    document.getElementById('postsList').innerHTML = '<li class="loading">حدث خطأ في تحميل المنشورات</li>';
+                });
+        }
+
+        function createPostElement(post) {
+            const li = document.createElement('li');
+            li.className = 'post';
+
+            const isLiked = post.likes.includes(localStorage.getItem('userId'));
+            const createdAt = new Date(post.createdAt.seconds * 1000).toLocaleDateString('ar-SA');
+
+            li.innerHTML = `
+                <div class="post-header">
+                    <div class="post-author" onclick="goToUserProfile('${post.userId}')">
+                        <img src="${post.author.profileImage || 'https://via.placeholder.com/45'}" alt="${post.author.username}">
+                        <div class="post-author-info">
+                            <h3>${post.author.username}</h3>
+                            <span>${createdAt}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-content">
+                    ${post.content}
+                </div>
+
+                ${post.mediaUrl ? `
+                    ${post.mediaType === 'audio' ? 
+                        `<audio class="post-media" controls src="${post.mediaUrl}"></audio>` :
+                        post.mediaType === 'video' ?
+                        `<video class="post-media" controls src="${post.mediaUrl}"></video>` :
+                        `<img class="post-media" src="${post.mediaUrl}" alt="post">`
+                    }
+                ` : ''}
+
+                <div class="post-actions-bar">
+                    <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}', this)">
+                        <span>${isLiked ? '❤️' : '🤍'}</span>
+                        <span class="like-count">${post.likes.length}</span>
+                    </button>
+                    <button class="action-btn" onclick="toggleComments('${post.id}', this)">
+                        <span>💬</span>
+                        <span class="like-count">${post.comments.length}</span>
+                    </button>
+                    <button class="action-btn" onclick="sharePost('${post.id}')">
+                        <span>📤</span>
+                    </button>
+                </div>
+
+                <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                    ${post.comments.map(comment => `
+                        <div class="comment">
+                            <img src="https://via.placeholder.com/32" alt="user">
+                            <div class="comment-content">
+                                <div class="comment-author">${comment.userId}</div>
+                                <div class="comment-text">${comment.content}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+
+                    <div class="add-comment">
+                        <img id="commentUserImg" src="https://via.placeholder.com/32" alt="user">
+                        <input type="text" placeholder="اكتب تعليق..." onkeypress="if(event.key==='Enter') addComment('${post.id}', this)">
+                    </div>
+                </div>
+            `;
+
+            return li;
+        }
+
+        function toggleLike(postId, btn) {
+            const userId = localStorage.getItem('userId');
+            const isLiked = btn.classList.contains('liked');
+
+            const endpoint = isLiked ? `/api/posts/${postId}/unlike` : `/api/posts/${postId}/like`;
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadPosts();
+                }
+            })
+            .catch(err => console.error('خطأ:', err));
+        }
+
+        function toggleComments(postId, btn) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            if (commentsSection.style.display === 'none') {
+                commentsSection.style.display = 'block';
+            } else {
+                commentsSection.style.display = 'none';
+            }
+        }
+
+        function addComment(postId, input) {
+            const content = input.value.trim();
+            if (!content) return;
+
+            const userId = localStorage.getItem('userId');
+
+            fetch(`/api/posts/${postId}/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, content })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    input.value = '';
+                    loadPosts();
+                }
+            })
+            .catch(err => console.error('خطأ:', err));
+        }
+
+        function sharePost(postId) {
+            alert('سيتم إضافة مشاركة قريباً!');
+        }
+
+        function openPostModal() {
+            document.getElementById('postModal').classList.add('active');
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').classList.remove('active');
+            document.getElementById('postForm').reset();
+            document.getElementById('filePreview').innerHTML = '';
+            mediaFile = null;
+        }
+
+        function previewMedia() {
+            const file = document.getElementById('mediaFile').files[0];
+            if (!file) return;
+
+            mediaFile = file;
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (file.type.startsWith('image/')) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="preview">`;
+                } else if (file.type.startsWith('video/')) {
+                    preview.innerHTML = `<video controls src="${e.target.result}"></video>`;
+                } else if (file.type.startsWith('audio/')) {
+                    preview.innerHTML = `<audio controls src="${e.target.result}"></audio>`;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function focusMediaInput(type) {
+            const fileInput = document.getElementById('mediaFile');
+            fileInput.accept = type === 'image' ? 'image/*' : type === 'video' ? 'video/*' : 'audio/*';
+            fileInput.click();
+        }
+
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const content = document.getElementById('postContent').value;
+            const userId = localStorage.getItem('userId');
+
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('content', content);
+
+            if (mediaFile) {
+                formData.append('media', mediaFile);
+                const type = mediaFile.type.startsWith('image/') ? 'image' : 
+                             mediaFile.type.startsWith('video/') ? 'video' : 'audio';
+                formData.append('mediaType', type);
+            }
+
+            try {
+                const res = await fetch('/api/posts/create', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    closePostModal();
+                    loadPosts();
+                }
+            } catch (err) {
+                console.error('خطأ:', err);
+            }
+        });
+
+        function goHome() {
+            window.location.href = '/';
+        }
+
+        function goToProfile() {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                window.location.href = `/profile/${userId}`;
+            }
+        }
+
+        function goToUserProfile(userId) {
+            window.location.href = `/profile/${userId}`;
+        }
+
+        function logout() {
+            localStorage.removeItem('userId');
+            window.location.href = '/login';
+        }
+    </script>
+</body>
+</html>
