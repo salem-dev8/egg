@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg - إنشاء منشور</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --success: #4ade80;
+            --danger: #ff6b6b;
+            --bg: #f4f7fa;
+            --card: #ffffff;
+            --text: #1a1c1e;
+            --text-light: #99aab5;
+            --border: #e8eef3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .navbar-brand img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .navbar-actions a, .navbar-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-light);
+            transition: 0.3s;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+
+        .navbar-actions a:hover, .navbar-actions button:hover {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: var(--text);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            outline: none;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            resize: vertical;
+            transition: 0.3s;
+            min-height: 150px;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .remove-image:hover {
+            background: rgba(255, 107, 107, 1);
+        }
+
+        .image-upload {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 40px 20px;
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            background: #fcfdfe;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary);
+            background: #f0f6ff;
+        }
+
+        .image-upload input {
+            display: none;
+        }
+
+        .image-upload-text {
+            text-align: center;
+        }
+
+        .image-upload-text i {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .image-upload-text p {
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.25);
+        }
+
+        .btn-primary:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+            flex: 0 1 auto;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d9e3;
+        }
+
+        .char-count {
+            text-align: left;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        .char-count.warning {
+            color: #ff9800;
+        }
+
+        .char-count.danger {
+            color: var(--danger);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="navbar-brand">
+        <img src="https://res.cloudinary.com/duixjs8az/image/upload/v1765998267/post_media/1765998267429-598220844_25338493479148699_2198426756832432568_n.jpg" alt="Egg">
+        <span>Egg</span>
+    </div>
+    <div class="navbar-actions">
+        <a href="home.html" title="الصفحة الرئيسية"><i class="fas fa-home"></i></a>
+        <a href="profile.html" title="ملفي الشخصي"><i class="fas fa-user"></i></a>
+        <button onclick="logout()" title="تسجيل الخروج"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h1><i class="fas fa-pen-fancy"></i> إنشاء منشور جديد</h1>
+
+        <form id="createPostForm">
+            <div class="form-group">
+                <label for="postText">نص المنشور</label>
+                <textarea id="postText" placeholder="شارك أفكارك مع الآخرين..." maxlength="5000"></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> / 5000
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>إضافة صورة</label>
+                <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                    <input type="file" id="imageInput" accept="image/*">
+                    <div class="image-upload-text">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>انقر لتحميل صورة أو اسحب وأفلت</p>
+                    </div>
+                </div>
+                <div id="imagePreviewContainer"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> نشر المنشور
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='home.html'">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // التحقق من تسجيل الدخول
+    function checkAuth() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+    }
+
+    // عداد الأحرف
+    document.getElementById('postText').addEventListener('input', (e) => {
+        const count = e.target.value.length;
+        const counter = document.getElementById('charCount');
+        counter.textContent = count;
+
+        if (count > 4500) {
+            counter.parentElement.classList.add('danger');
+            counter.parentElement.classList.remove('warning');
+        } else if (count > 4000) {
+            counter.parentElement.classList.add('warning');
+            counter.parentElement.classList.remove('danger');
+        } else {
+            counter.parentElement.classList.remove('warning', 'danger');
+        }
+    });
+
+    // معالجة تحميل الصور
+    const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    let uploadedImageData = null;
+
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                uploadedImageData = event.target.result;
+                displayImagePreview(event.target.result);
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    function displayImagePreview(src) {
+        imagePreviewContainer.innerHTML = `
+            <div class="image-preview">
+                <img src="${src}" alt="preview">
+                <button type="button" class="remove-image" onclick="removeImage()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    function removeImage() {
+        uploadedImageData = null;
+        imageInput.value = '';
+        imagePreviewContainer.innerHTML = '';
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3000);
+    }
+
+    // معالجة إرسال النموذج
+    document.getElementById('createPostForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const text = document.getElementById('postText').value.trim();
+
+        if (!text) {
+            showToast('يرجى كتابة نص المنشور', 'error');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+
+        try {
+            const response = await fetch('/api/posts/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                },
+                body: JSON.stringify({
+                    content: text,
+                    image: uploadedImageData,
+                    userId: localStorage.getItem('userId')
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                showToast('تم نشر المنشور بنجاح!');
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+            } else {
+                showToast(data.message || 'خطأ في نشر المنشور', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> نشر المنشور';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('حدث خطأ في الاتصال', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> نشر المنشور';
+        }
+    });
+
+    function logout() {
+        if (confirm('هل تريد تسجيل الخروج؟')) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userId');
+            window.location.href = 'splash.html';
+        }
+    }
+
+    // التحقق عند التحميل
+    document.addEventListener('DOMContentLoaded', checkAuth);
+</script>
+
+</body>
+</html>

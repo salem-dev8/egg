@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg - منصة التواصل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0066ff;
+            --bg: #f4f7fa;
+            --glass: #ffffff;
+            --border: #e8eef3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg);
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--glass);
+            width: 100%;
+            max-width: 420px;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+            border: 1px solid #fff;
+        }
+
+        /* قسم الصور المطور */
+        .image-upload-section {
+            position: relative;
+            height: 160px;
+            background: var(--primary); /* اللون الافتراضي للغلاف */
+            background-size: cover;
+            background-position: center;
+            display: none; 
+            transition: all 0.3s ease;
+        }
+
+        .cover-label {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-upload {
+            position: absolute;
+            bottom: -45px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 32px;
+            border: 5px solid #fff;
+            background: #fff;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* الطبقة الشفافة (Overlay) */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            color: white;
+            font-size: 18px;
+            gap: 5px;
+        }
+
+        .overlay span { font-size: 10px; font-weight: 600; }
+
+        .cover-label:hover .overlay,
+        .profile-upload:hover .overlay {
+            opacity: 1;
+        }
+
+        .profile-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content {
+            padding: 50px 30px 30px 30px;
+            text-align: center;
+        }
+
+        .logo-small {
+            width: 75px;
+            height: 75px;
+            border-radius: 22px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        h2 {
+            color: #222;
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border);
+            background: #fcfdfe;
+            outline: none;
+            transition: 0.3s;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .toggle-password {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #99aab5;
+            z-index: 5;
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .main-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.25);
+        }
+
+        .footer-toggle {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .footer-toggle span {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .file-input { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="image-upload-section" id="imageSection">
+        <label for="coverInput" class="cover-label">
+            <div class="overlay">
+                <i class="fas fa-camera"></i>
+                <span>تغيير الغلاف</span>
+            </div>
+        </label>
+        <input type="file" id="coverInput" class="file-input" accept="image/*">
+        
+        <div class="profile-upload">
+            <label for="profileInput">
+                <img src="https://res.cloudinary.com/duixjs8az/image/upload/v1766041351/post_media/1766041351185-597659491_1809911759727491_5903335735084455272_n.jpg" class="profile-preview" id="profileDisplay">
+                <div class="overlay">
+                    <i class="fas fa-camera"></i>
+                </div>
+            </label>
+            <input type="file" id="profileInput" class="file-input" accept="image/*">
+        </div>
+    </div>
+
+    <div class="content">
+        <img src="https://res.cloudinary.com/duixjs8az/image/upload/v1765998267/post_media/1765998267429-598220844_25338493479148699_2198426756832432568_n.jpg" class="logo-small" id="mainLogo">
+        
+        <h2 id="formTitle">دخول إلى Egg</h2>
+
+        <form id="authForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+            </div>
+
+            <div class="input-group" id="usernameGroup" style="display: none;">
+                <input type="text" id="username" placeholder="اسم المستخدم">
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="pass1" placeholder="كلمة المرور" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePass('pass1')"></i>
+            </div>
+
+            <div class="input-group" id="confirmPassGroup" style="display: none;">
+                <input type="password" id="pass2" placeholder="تأكيد كلمة المرور">
+                <i class="fas fa-eye toggle-password" onclick="togglePass('pass2')"></i>
+            </div>
+
+            <button type="submit" class="main-btn" id="submitBtn">دخول</button>
+        </form>
+
+        <div class="footer-toggle">
+            <p id="toggleText">ليس لديك حساب؟ <span onclick="toggleMode()">إنشاء حساب</span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let isRegister = false;
+    let profileImageData = null;
+    let coverImageData = null;
+
+    function toggleMode() {
+        isRegister = !isRegister;
+        const imageSection = document.getElementById('imageSection');
+        const usernameGroup = document.getElementById('usernameGroup');
+        const confirmPassGroup = document.getElementById('confirmPassGroup');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleText = document.getElementById('toggleText');
+        const mainLogo = document.getElementById('mainLogo');
+
+        if (isRegister) {
+            imageSection.style.display = 'block';
+            usernameGroup.style.display = 'block';
+            confirmPassGroup.style.display = 'block';
+            formTitle.innerText = "إنشاء حساب جديد";
+            submitBtn.innerText = "إنشاء الحساب";
+            toggleText.innerHTML = 'لديك حساب؟ <span onclick="toggleMode()">سجل دخولك</span>';
+            mainLogo.style.display = 'none';
+        } else {
+            imageSection.style.display = 'none';
+            usernameGroup.style.display = 'none';
+            confirmPassGroup.style.display = 'none';
+            formTitle.innerText = "دخول إلى Egg";
+            submitBtn.innerText = "دخول";
+            toggleText.innerHTML = 'ليس لديك حساب؟ <span onclick="toggleMode()">إنشاء حساب</span>';
+            mainLogo.style.display = 'inline-block';
+        }
+    }
+
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        const icon = input.nextElementSibling;
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = "password";
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+
+    // معاينة البروفايل
+    document.getElementById('profileInput').addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('profileDisplay').src = event.target.result;
+                profileImageData = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // معاينة الغلاف
+    document.getElementById('coverInput').addEventListener('change', function(e) {
+        if (e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('imageSection').style.backgroundImage = `url(${event.target.result})`;
+                coverImageData = event.target.result;
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // معالجة النموذج
+    document.getElementById('authForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('pass1').value;
+        const username = document.getElementById('username').value;
+        const confirmPass = document.getElementById('pass2').value;
+
+        if (isRegister) {
+            if (password !== confirmPass) {
+                alert('كلمات المرور غير متطابقة');
+                return;
+            }
+            if (!username) {
+                alert('يرجى إدخال اسم المستخدم');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email,
+                        username,
+                        password,
+                        profile: profileImageData,
+                        cover: coverImageData
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userId', data.userId);
+                    window.location.href = 'home.html';
+                } else {
+                    alert(data.message || 'خطأ في إنشاء الحساب');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('حدث خطأ في الاتصال');
+            }
+        } else {
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userId', data.userId);
+                    window.location.href = 'home.html';
+                } else {
+                    alert(data.message || 'بيانات دخول غير صحيحة');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('حدث خطأ في الاتصال');
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Egg - مرحباً بك</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8faff; /* خلفية فاتحة ومريحة */
+            overflow: hidden;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* تصميم الأيقونة وتأثير النبض */
+        .logo-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            border-radius: 35px;
+            object-fit: cover;
+            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.15);
+        }
+
+        /* اسم المنصة */
+        h1 {
+            font-size: 28px;
+            color: #1a1c1e;
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.5s;
+        }
+
+        /* التوقيع في الأسفل */
+        .footer {
+            margin-bottom: 40px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 1s forwards 1s;
+        }
+
+        .footer p {
+            font-size: 14px;
+            color: #99aab5;
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 1.5px;
+        }
+
+        .footer span {
+            color: #0066ff;
+            font-weight: 600;
+        }
+
+        /* تأثيرات الحركة */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* دائرة التحميل البسيطة */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e1e8ef;
+            border-top: 3px solid #0066ff;
+            border-radius: 50%;
+            margin-top: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="logo-wrapper">
+            <img src="https://res.cloudinary.com/duixjs8az/image/upload/v1765998267/post_media/1765998267429-598220844_25338493479148699_2198426756832432568_n.jpg" alt="Egg Logo">
+        </div>
+        <h1>Egg</h1>
+        <div class="loader"></div>
+    </div>
+
+    <div class="footer">
+        <p>FROM <span>SALEM AHMED</span></p>
+    </div>
+
+    <script>
+        // التحقق من حالة المستخدم وتوجيهه
+        setTimeout(() => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                window.location.href = 'home.html'; // إذا كان مسجل دخول، اذهب للصفحة الرئيسية
+            } else {
+                window.location.href = 'login.html'; // وإلا اذهب لصفحة الدخول
+            }
+        }, 3500);
+    </script>
+</body>
+</html>
